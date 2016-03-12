@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" 
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="/resources/templates/mainTemplate.xhtml">
+
+            <ui:define name="content">
+                <!-- primary message and search bar-->
+                <div class="container">
+                    <div class="jumbotron">
+                        <h1>What is Hoogies?</h1>
+                        <h3>Hoogies is the place where you can share your interests with others and make friends.</h3>
+                        <div class="row">
+                            <div id="searchbar" class="col-md-6">
+                                <h:form id="searchForm" class="input-group stylish-input-group">
+                                    <h:inputText id="searchKey" class="form-control" p:placeholder="What is your interest?" value="#{search.key}"/>
+                                    <span class="input-group-addon">
+                                        <h:commandButton style="visibility: hidden" action="#{search.searchByKey}"/>
+                                        <h:commandLink type="submit" action="#{search.searchByKey}">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </h:commandLink>
+                                    </span>  
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <c:if test="#{not empty search.key}">
+                    <ui:include src="/resources/xhtml/searchResults.xhtml"/>
+                </c:if>
+
+                <c:if test="#{empty search.key}">
+                    <!-- categories grid-->
+                    <div class="container">
+                        <ui:repeat value="#{interestsBean.interestsList}" var="interest"> 
+                            <div class="col-md-4">
+                                <h:form>
+                                    <h:commandButton type="submit" action="#{search.searchByInterest(interest.interestName)}"
+                                                     class="btn btn-default btn-sq-lg btn-primary-grid interest-btn"
+                                                     style="background: -webkit-linear-gradient(top, rgba(0,0,0,0.0) 50%,rgba(0,0,0,0.7) 95%), 
+                                                     url('#{resource[interest.picture]}');
+                                                     background-size: 100% 100%; 
+                                                     background-repeat:no-repeat;">
+                                        <div>
+                                            <h3 class="group-nametag"><b>#{interest.interestName}</b></h3>
+                                        </div>
+                                    </h:commandButton>
+                                </h:form>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </c:if>
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+</html>

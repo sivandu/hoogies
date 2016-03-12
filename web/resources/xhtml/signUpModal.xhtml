@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+    </h:head>
+    
+    <h:body>
+        <!-- Sign up Modal -->
+        <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&#215;</span></button>
+                        <h4 class="modal-title" id="signupModalLabel">Sign up to Hoogies</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h:form id="signupForm" class="form-horizontal" rendered="true">
+                            <fieldset>
+                                <div class="form-group required">
+                                    <label for="inputFirstName" class="col-lg-3 control-label">First Name</label>
+                                    <div class="col-lg-9">
+                                        <h:inputText class="form-control" value="#{signup.firstName}" id="inputFirstName" 
+                                                     required="true" requiredMessage="First Name is required">
+                                            <f:validateRequired />
+                                            <f:ajax event="blur" render="inputFirstNameMessage" />
+                                        </h:inputText>
+                                        <h:message id="inputFirstNameMessage" class="text text-danger" for="inputFirstName" />
+                                    </div>   
+                                </div>
+                                <div class="form-group required">
+                                    <label for="inputLastName" class="col-lg-3 control-label" >Last Name</label>
+                                    <div class="col-lg-9">
+                                        <h:inputText class="form-control" value="#{signup.lastName}" id="inputLastName" 
+                                                     required="true" requiredMessage="Last Name is required">
+                                            <f:validateRequired />
+                                            <f:ajax event="blur" render="inputLastNameMessage" />
+                                        </h:inputText>
+                                        <h:message id="inputLastNameMessage" class="text text-danger" for="inputLastName" />
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label for="inputEmail" class="col-lg-3 control-label" >Email</label>
+                                    <div class="col-lg-9">
+                                        <h:inputText class="form-control" value="#{signup.email}" id="inputEmail" 
+                                                     required="true" requiredMessage="Email is required" 
+                                                     validatorMessage="Validation Error: Not a valid Email format">
+                                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                            <f:ajax event="blur" render="inputEmailMessage" />
+                                        </h:inputText>
+                                        <h:message id="inputEmailMessage" class="text text-danger" for="inputEmail" />
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label for="inputUsername" class="col-lg-3 control-label">Username</label>
+                                    <div class="col-lg-9">
+                                        <h:inputText class="form-control" value="#{signup.userName}" id="inputUsername" 
+                                                     required="true" requiredMessage="Username is required" 
+                                                     validatorMessage="Validation Error: Username length must be between 5-10 characters">
+                                            <f:validateLength minimum="5" maximum="10" />
+                                            <f:ajax event="blur" render="inputUsernameMessage" />
+                                        </h:inputText>
+                                        <h:message id="inputUsernameMessage" class="text text-danger" for="inputUsername" />
+                                    </div>
+
+                                </div>
+                                <div class="form-group required">
+                                    <label for="inputPassword" class="col-lg-3 control-label" >Password</label>
+                                    <div class="col-lg-9">
+                                        <h:inputSecret class="form-control" value="#{signup.password}" id="inputPassword" redisplay="true" 
+                                                       required="true" requiredMessage="Password is required">
+                                            <f:validator validatorId="passwordValidator" />
+                                            <f:attribute name="inputConfirmPassword" value="#{inputConfirmPassword}" />
+                                        </h:inputSecret>
+                                        <h:message id="inputPasswordMessage" class="text text-danger" for="inputPassword" />
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label for="inputConfirmPassword" class="col-lg-3 control-label" >Confirm Password</label>
+                                    <div class="col-lg-9">
+                                        <h:inputSecret class="form-control" value="#{signup.password}" id="inputConfirmPassword" redisplay="true"
+                                                       binding="#{inputConfirmPassword}"
+                                                       required="true" requiredMessage="Please confirm password"/>
+                                        <h:message id="inputConfirmPasswordMessage" class="text text-danger" for="inputConfirmPassword" />
+                                    </div>
+                                </div>
+                                
+                                <h:outputText value="#{signup.output}" class="text text-danger" id="out"/>
+                                
+                                <div class="form-group modal-footer">
+                                    <div class="col-lg-10 col-lg-offset-2">
+                                        <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton value="Submit" class="btn btn-primary" action="#{signup.register()}">
+                                            <f:ajax execute="@form" render="@form"/>
+                                        </h:commandButton>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </h:form>              
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+</html>
+

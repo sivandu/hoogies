@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" 
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:body>
+
+        <ui:composition template="/resources/templates/mainTemplate.xhtml">
+
+            <ui:define name="css">
+                <h:outputStylesheet name="bootstrap/css/bootstrap-clockpicker.min.css"/>
+            </ui:define>
+
+            <ui:define name="content"> 
+                <div class="container">
+                    <!--Edit Group Form-->
+                    <div class="panel panel-primary" style="margin-top: 80px; background-color: #ecf0f1">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Edit Group: "#{group.name}"</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h:form class="form-horizontal">
+                                <fieldset>
+                                    <div class="form-group required">
+                                        <label for="inputGroupName" class="col-lg-2 control-label">Name</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputGroupName" class="form-control" p:placeholder="Name" value="#{group.name}" 
+                                                         required="true" requiredMessage="Validation Error: Group Name is required">
+                                                <f:validateRequired />
+                                                <f:ajax event="blur" render="inputGroupNameMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputGroupNameMessage" class="text text-danger" for="inputGroupName" />
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label for="selectInterest" class="col-lg-2 control-label">Interest</label>
+                                        <div class="col-lg-10">
+                                            <h:selectOneMenu id="selectInterest" class="form-control" value="#{group.interest}">
+                                                <f:selectItems value="#{group.availableInterests}" var="interest"
+                                                               itemLabel="#{interest.interestName}" itemValue="#{interest.interestId}"/>                           
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="textArea" class="col-lg-2 control-label">Description</label>
+                                        <div class="col-lg-10">
+                                            <h:inputTextarea id="textArea" class="form-control" rows="5"
+                                                             p:placeholder="Say a few words on your interest group..." value="#{group.description}"
+                                                             validatorMessage="Validation Error: Text too long. Maximum 1000 characters allowed.">
+                                                <f:validateLength maximum="1000"></f:validateLength>
+                                                <f:ajax event="blur" render="textAreaMessage" />
+                                            </h:inputTextarea> 
+                                            <h:message id="textAreaMessage" class="text text-danger" for="textArea" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputAddress" class="col-lg-2 control-label">Address</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputAddress" class="form-control" p:placeholder="Address" value="#{group.address}"
+                                                         required="true" requiredMessage="Validation Error: Address is required">
+                                                <f:validateRequired />
+                                                <f:ajax event="blur" render="inputAddressMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputAddressMessage" class="text text-danger" for="inputAddress" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputDaysSelection" class="col-lg-2 control-label">Days</label>
+                                        <div class="col-lg-10">
+                                            <h:selectManyCheckbox id="inputDaysSelection" value="#{group.daysAsStringArray}" layout="lineDirection" 
+                                                                  required="true" requiredMessage="Validation Error: Days selection is required">
+                                                <f:selectItem itemValue="1" itemLabel="Sunday" />
+                                                <f:selectItem itemValue="2" itemLabel="Monday" />
+                                                <f:selectItem itemValue="3" itemLabel="Theusday" />
+                                                <f:selectItem itemValue="4" itemLabel="Wedensday" />
+                                                <f:selectItem itemValue="5" itemLabel="Thursday" />
+                                                <f:selectItem itemValue="6" itemLabel="Friday" />
+                                                <f:selectItem itemValue="7" itemLabel="Saturday" />
+                                                <f:ajax event="blur" render="inputDaysSelectionMessage" />
+                                            </h:selectManyCheckbox>
+                                            <h:message id="inputDaysSelectionMessage" class="text text-danger" for="inputDaysSelection" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputHour" class="col-lg-2 control-label">Hour</label>
+                                        <div class="col-lg-10">
+                                            <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
+                                                <h:inputText id="inputHour" class="form-control" p:placeholder="09:30" value="#{group.hour}"
+                                                             required="true" requiredMessage="Validation Error: Hour is required">
+                                                    <f:validateRequired />
+                                                    <f:ajax event="blur" render="inputHourMessage" />
+                                                </h:inputText>
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </span>
+                                            </div>
+                                            <h:message id="inputHourMessage" class="text text-danger" for="inputHour" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputDuration" class="col-lg-2 control-label">Duration(Hours)</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputDuration" class="form-control" p:type="number" p:min="1" value="#{group.duration}">
+                                                <f:convertNumber integerOnly="true" type="number" />
+                                            </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputNumParticipants" class="col-lg-2 control-label">Maximum participants</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputNumParticipants" class="form-control" p:type="number" p:step="1" p:min="0" value="#{group.maxParticipants}">
+                                                <f:convertNumber integerOnly="true" type="number" />
+                                            </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPrice" class="col-lg-2 control-label">Price</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputPrice" class="form-control" p:type="number" p:step="1" p:min="0" value="#{group.price}">
+                                                <f:convertNumber integerOnly="true" type="number" />
+                                            </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputEmail" class="form-control" p:placeholder="Email" value="#{group.email}"
+                                                         validatorMessage="Validation Error: Not a valid Email format">
+                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                <f:ajax event="blur" render="inputEmailMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputEmailMessage" class="text text-danger" for="inputEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPhone" class="col-lg-2 control-label">Phone</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText id="inputPhone" class="form-control" p:placeholder="Phone" value="#{group.phone}"
+                                                         validatorMessage="Validation Error: Not a valid Phone format">
+                                                <f:validateRegex pattern="(\d{2,3}-\d{7})" />
+                                                <f:ajax event="blur" render="inputPhoneMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputPhoneMessage" class="text text-danger" for="inputPhone" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-10 col-lg-offset-2">
+                                            <h:commandButton type="submit" value="Edit" class="btn btn-success" action="#{group.editGroup()}" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </h:form>  
+                        </div>
+                    </div>
+                </div>
+
+            </ui:define>
+
+            <ui:define name="scripts">
+
+                <h:outputScript library="bootstrap/js" name="bootstrap-clockpicker.min.js" />
+
+                <script type="text/javascript">
+                    $('.clockpicker').clockpicker();
+                </script>
+
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+</html>
+

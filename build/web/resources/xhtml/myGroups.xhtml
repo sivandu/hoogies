@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+
+    </h:head>
+
+    <h:body>
+        <div>
+            <!--Member of-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Member of</b></h3>
+                </div>
+                <div class="panel-body">
+                    <c:if test="#{empty user.getMemberOfGroups(login.userName)}">
+                        <p>Not a member of any group</p>
+                    </c:if>
+                    <ui:repeat value="#{user.getMemberOfGroups(login.userName)}" var="groupItem">
+                        <div class="row" style='margin-bottom: 10px'>
+                            <!--group image-->
+                            <div class="col-md-2">
+                                <h:graphicImage value="#{groupItem.picture}" width="100%" style="margin-bottom: 10px"/><br/>
+                            </div>
+                            <!--group info-->
+                            <div class="col-md-10" >
+                                <h:outputLink value="viewGroup.xhtml"> 
+                                    <h4><u><b><h:outputText value="#{groupItem.groupName}"/></b></u></h4>
+                                    <f:param name="group" value="#{groupItem.groupId}" />
+                                </h:outputLink>
+                                <p id="groupDescription" style="font-size: 17px">#{groupItem.description}</p>
+                            </div>
+                        </div>
+                        <hr/>
+                    </ui:repeat>
+                </div>
+            </div>
+
+            <!--Organizer of-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Organizer of</b></h3>
+                </div>
+                <div class="panel-body">
+                    <c:if test="#{empty user.getOrganizedGroups(login.userName)}">
+                        <p>Not organizing any group</p>
+                    </c:if>
+                    <ui:repeat value="#{user.getOrganizedGroups(login.userName)}" var="groupItem">
+                        <div class="row" style='margin-bottom: 10px'>
+                            <!--group image-->
+                            <div class="col-md-2">
+                                <h:graphicImage value="#{groupItem.picture}" width="100%" style="margin-bottom: 10px"/><br/>
+                            </div>
+                            <!--group info-->
+                            <div class="col-md-10">
+                                <h:outputLink value="viewGroup.xhtml"> 
+                                    <h4><u><b><h:outputText value="#{groupItem.groupName}"/></b></u></h4>
+                                    <f:param name="group" value="#{groupItem.groupId}" />
+                                </h:outputLink>
+                                <p id="groupDescription" style="font-size: 17px">#{groupItem.description}</p>
+                            </div>
+                        </div>
+                        <hr/>
+                    </ui:repeat>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+</html>

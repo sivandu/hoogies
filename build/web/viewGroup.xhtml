@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:viewParam name="group" value="#{groupPage.groupId}" />
+    </f:metadata>
+
+    <h:body>
+        <ui:composition template="/resources/templates/mainTemplate.xhtml">
+
+            <ui:define name="content">
+                <div class="container" style="width: 1000px;">
+                    <!--group name-->
+                    <div class="jumbotron-header">
+                        <h1>#{groupPage.group.groupName}</h1> 
+                    </div>
+                    <h:form id="groupMainForm">
+                        <div class="panel panel-default button-panel">
+                            <div class="panel-body button-panel-body">
+                                <div class="col-md-10" style="padding-left: 0px;">
+                                    <c:if test="#{groupPage.isOrganizer(login.userName)}">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown-options" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="true">
+                                                Manage
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdown-options">
+                                                <li><p:commandLink value="Delete"
+                                                                   actionListener="#{groupPage.deleteGroup()}" 
+                                                                   action="/index.xhtml?faces-redirect=true">
+                                                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert"/>
+                                                    </p:commandLink></li>
+                                                <li><h:link value="Edit" outcome="editGroup">
+                                                        <f:param name="group" value="#{groupPage.group.groupId}"/>
+                                                    </h:link></li>
+                                                <li><h:commandLink value="Message" onclick="$('#newMsgModal').modal('show'); return false;"/></li>
+                                                <li><h:link value="Participants" outcome="showParticipants">
+                                                        <f:param name="group" value="#{groupPage.group.groupId}"/>
+                                                    </h:link></li>
+                                            </ul>
+                                        </div>
+                                    </c:if>
+                                </div>
+
+                                <!--join\leave-->
+                                <div class="col-md-2" style="padding-right: 0px;">
+                                    <c:if test="#{not login.loggedIn}">
+                                        <button type="button" class="btn btn-danger" style="width: 100%; align-content: center;" 
+                                                data-toggle="modal" data-target="#loginModal">Join</button>
+                                    </c:if>
+                                    <c:if test="#{login.loggedIn and not groupPage.isMemberOf(login.userName)}">
+                                        <h:commandButton id="joinBtn" type="submit" value="Join" title="#{groupPage.isGroupFull()}" 
+                                                         class="btn btn-danger" style="width: 100%; align-content: center;" 
+                                                         disabled="#{groupPage.group.full}" action="#{groupPage.joinGroup(login.userName)}" >
+                                        </h:commandButton>
+                                    </c:if>
+                                    <c:if test="#{groupPage.isMemberOf(login.userName)}">
+                                        <h:commandButton type="submit" value="Leave" class="btn btn-danger" style="width: 100%"
+                                                         action="#{groupPage.leaveGroup(login.userName)}">
+                                        </h:commandButton>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+
+                    <!--group details-->
+                    <div class="col-md-9">
+                        <!--description-->
+                        <div class="panel panel-default">
+                            <div class="panel-body group-info-text">
+                                #{groupPage.group.description}
+                                <hr/>
+                                <h5>Interest: #{groupPage.group.interest.interestName}</h5>
+                            </div>
+                        </div>
+                        <!--messages-->
+                        <c:if test="#{groupPage.isMemberOf(login.userName) or groupPage.isOrganizer(login.userName)}">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Messages</div>
+                                <div class="panel-body group-info-text">
+                                    <c:if test="#{empty groupPage.group.messages}">
+                                        <p>Welcome to "#{groupPage.group.groupName}" group!</p>
+                                    </c:if>
+                                    <c:if test="#{not empty groupPage.group.messages}">
+                                        <!--display last message-->
+                                        <h:form>
+                                            <c:if test="#{groupPage.isOrganizer(login.userName)}">
+                                                <h:commandLink type="submit" action="#{message.deleteMessage(message.getLastMessage())}" 
+                                                               style="float: right; padding-left: 15px;">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </h:commandLink>
+                                                <p:commandLink action="#{message.setCurrentMessage(message.getLastMessage())}" update=":editMsgForm" 
+                                                               style="float: right;"
+                                                               oncomplete="$('#editMsgModal').modal('show');">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </p:commandLink>
+                                            </c:if>
+                                            <h:outputText value="#{groupPage.getFormatedDate(message.getLastMessage().timestamp)}" class="timestamp"/>
+                                            <p><h:outputText value="#{message.getLastMessage().content}"/></p>
+                                            <hr/>
+                                        </h:form>
+                                        <!--display all messages-->
+                                        <div id="showall" class="collapse" >
+                                            <h:form>
+                                                <ui:repeat value="#{message.getPreviousMessages()}" var="msg">
+                                                    <h:commandLink type="submit" action="#{message.deleteMessage(msg)}" style="float: right; padding-left: 15px;">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </h:commandLink>
+                                                    <p:commandLink action="#{message.setCurrentMessage(msg)}" update=":editMsgForm" style="float: right;"
+                                                                   oncomplete="$('#editMsgModal').modal('show');">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </p:commandLink>
+                                                    <div>
+                                                        <h:outputText value="#{groupPage.getFormatedDate(msg.timestamp)}" class="timestamp"/>
+                                                        <p><h:outputText value="#{msg.content}"/></p>
+                                                        <hr/>
+                                                    </div>
+                                                </ui:repeat>
+                                            </h:form>
+                                        </div>
+
+                                        <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#showall" style="display:block; width: 100%">
+                                            Show All
+                                        </button>
+                                    </c:if>
+                                </div>
+                            </div>
+                        </c:if>
+
+                        <!--reviews-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Reviews</div>
+                            <div class="panel-body group-info-text">
+                                <c:if test="#{empty groupPage.group.reviews}">
+                                    <p>No reviews.</p>
+                                </c:if>
+                                <h:form>
+                                    <ui:repeat value="#{groupPage.group.reviews}" var="rev">
+                                        <h:commandLink type="submit" action="#{review.deleteReview(rev)}" style="float: right; padding-left: 15px;" 
+                                                       rendered="#{groupPage.isAuthor(rev, login.userName)}">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </h:commandLink>
+                                        <p:commandLink action="#{review.setCurrentReview(rev)}" update=":editReviewForm" style="float: right;"
+                                                       oncomplete="$('#editReviewModal').modal('show');"
+                                                       rendered="#{groupPage.isAuthor(rev, login.userName)}">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </p:commandLink>
+                                        <h:outputText value="#{groupPage.getFormatedDate(rev.timestamp)} | by #{rev.user.userName}:" class="timestamp"/>
+                                        <p><h:outputText value="#{rev.content}"/></p>
+                                        <hr/>
+                                    </ui:repeat>
+                                    <c:if test="#{login.loggedIn}">
+                                        <h:inputTextarea id="inputReview" cols="30" rows="5" value="#{review.reviewText}"/>
+                                        <h:commandButton class="btn btn-success" value="Send" type="submit" 
+                                                         action="#{review.createReview(login.userName)}" style="float: right;"/>
+                                    </c:if>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <!--group image-->
+                        <div class="panel panel-default">
+                            <c:if test="#{groupPage.group.picture != null}">
+                                <h:graphicImage value="#{groupPage.group.picture}" width="100%" height="100%"/>
+                            </c:if>
+                            <c:if test="#{groupPage.isOrganizer(login.userName)}">
+                                <h:form id="form" enctype="multipart/form-data">
+                                    <label class="control-label">Change picture</label>
+                                    <p><h:inputFile id="file" value="#{file.uploadedFile}"> 
+                                            <f:validator validatorId="FileValidator"/>
+                                        </h:inputFile>
+                                    </p>
+                                    <p><h:messages id="fileUploadMessage" class="text text-danger"/></p>
+                                    <h:commandButton id="button" value="Upload" class="btn btn-primary" style="margin-bottom: 10px; margin-left: 120px;"
+                                                     action="#{groupPage.setGroupPicture(file.upload('/images/groups', groupPage.group.groupName))}"/>
+                                </h:form>
+                            </c:if>
+                        </div>
+                        <!--join information-->
+                        <div id="join-info" class="panel panel-default">
+                            <div class="panel-body group-info-text">
+                                <p>Max. participants allowed: #{groupPage.group.maxParticipants}</p>
+                                <p>Free places left: #{groupPage.group.calcFreePlaces()}</p>
+                                <p>Price: #{groupPage.groupPrice}</p>
+                            </div>
+                        </div>
+                        <!--when and where-->
+                        <div class="panel panel-default">
+                            <div class="panel-body group-info-text">
+                                <p><label>When and Where:</label></p>
+                                <p><h5>#{groupPage.group.address}</h5></p>
+                                <p><h5>#{groupPage.group.days} at #{groupPage.group.groupHour}</h5></p>
+                                <p><h5>Duration: #{groupPage.group.duration} hour(s)</h5></p>
+                            </div>
+                        </div>
+                        <!--contact-->
+                        <div class="panel panel-default">
+                            <div class="panel-body group-info-text">
+                                <p><label>Contact Information:</label></p>
+                                <p><span class="glyphicon glyphicon-envelope"></span>
+                                    <a href="mailto:#{groupPage.group.email}">&nbsp;#{groupPage.group.email}</a></p>
+                                <p><span class="glyphicon glyphicon-earphone"></span>&nbsp;#{groupPage.group.phoneNumber}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h:form>
+                        <p:confirmDialog class="dialog-centered" global="true">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </h:form>
+
+                </div>
+
+
+                <ui:include src="/resources/xhtml/newMsgModal.xhtml"/>
+                <ui:include src="/resources/xhtml/editMsgModal.xhtml"/>
+                <ui:include src="/resources/xhtml/editReviewModal.xhtml"/>
+
+            </ui:define>
+
+            <!--            <ui:define name="scripts">
+            
+                            <h:outputScript library="bootstrap" name="js/bootstrap-dialog.min.js" />
+            
+                            <script type="text/javascript">
+                                $('#editMsgModal').on('show.bs.modal', function (event) {
+                                    var button = $(event.relatedTarget); // Button that triggered the modal
+                                    var text = button.data('text'); // Extract info from data-* attributes
+                                    var modal = $(this);
+                                    modal.find('.modal-body textarea').val(text);
+                                });
+                            </script>
+                        </ui:define>-->
+
+        </ui:composition>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+
+    </h:head>
+
+    <h:body>
+
+        <!-- Edit Message Modal -->
+        <div class="modal fade" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&#215;</span></button>
+                        <h4 class="modal-title" id="editReviewModalLabel">Edit Message</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h:form id="editReviewForm" class="form-horizontal">
+                            <h:inputTextarea id="inputReview" cols="30" rows="10" value="#{review.currentReview.content}" />
+                            <div class="form-group modal-footer">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton value="Edit" class="btn btn-primary" action="#{review.editReview(review.currentReview)}"/>
+                                </div>
+                            </div>
+                        </h:form>              
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+
+
+
+</html>
+

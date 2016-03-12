@@ -1,0 +1,116 @@
+html,
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+}
+textarea {
+    width: 100%;
+}
+#searchbar{
+    margin-top: 6vh;
+}
+.stylish-input-group .input-group-addon{
+    background: white !important;
+    border: 2px solid #ccc;
+    border-left: transparent;
+}
+.stylish-input-group .form-control{
+    border-right:0; 
+    box-shadow:0 0 0; 
+    border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+.jumbotron{
+    padding-top: 100px;
+    padding-bottom: 30px;
+}
+.body-height{
+    margin-top: 80px;
+}
+.jumbotron-header{
+    margin: 80px 15px 0px;
+    background-color: #18bc9c !important;
+    border-bottom: 8px solid rgba(255,255,255,.25);
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 60px;
+    padding-left: 60px;   
+}
+.btn-sq-lg {
+    width: 100% !important;
+    height: 20vh !important;
+}
+.btn-primary-grid {
+    margin-bottom: 1vh;
+    margin-top: 2vh;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 3px;
+    border-width: 1px;
+}
+.group-nametag {
+    line-height: 60px;
+    color: #fff;
+    padding: 100px 18px 0;
+    vertical-align: bottom;
+    width: inherit;
+    position: absolute;
+    bottom: 0;
+    pointer-events: none;
+}
+.interest-btn {
+    background-size: 100% 100%; 
+    background-repeat:no-repeat;
+}
+#wrapper {
+    min-height:100%;
+    position:relative;
+}
+#content {
+    padding-bottom:60px;
+}
+.navbar-center {
+    margin-top: 20px;
+}
+.group-info-text {
+    font-size: medium;
+}
+.button-panel{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.button-panel-body {
+    padding: 5px;
+}
+#edit-btn {
+    color: #18bc9c;
+    background-color: transparent;
+    text-decoration: underline;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+.timestamp {
+    font-size: 13px;
+    color: rgba(0,0,0,.67);
+}
+.form-group.required .control-label:after {
+    content: "*";
+    color: red;
+}
+.dialog-centered {
+ top: 30% !important;
+ left:45% !important;
+}

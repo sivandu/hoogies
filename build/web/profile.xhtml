@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="/resources/templates/mainTemplate.xhtml">
+
+            <ui:define name="content">
+                <div class="container">
+                    <div class="panel panel-default body-height">
+                        <div class="panel-body">
+                            <h1>#{user.currentUser.firstName} #{user.currentUser.lastName}</h1>
+                            <hr/>
+                            <div class="col-md-8">
+                                <h:form class="form-horizontal">
+                                    <div class="form-group required">
+                                        <label for="inputFirstName" class="col-lg-2 control-label">First Name</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText class="form-control" value="#{user.currentUser.firstName}" id="inputFirstName" 
+                                                         required="true" requiredMessage="First Name is required">
+                                                <f:validateRequired />
+                                                <f:ajax event="blur" render="inputFirstNameMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputFirstNameMessage" class="text text-danger" for="inputFirstName" />
+                                        </div>   
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputLastName" class="col-lg-2 control-label" >Last Name</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText class="form-control" value="#{user.currentUser.lastName}" id="inputLastName" 
+                                                         required="true" requiredMessage="Last Name is required">
+                                                <f:validateRequired />
+                                                <f:ajax event="blur" render="inputLastNameMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputLastNameMessage" class="text text-danger" for="inputLastName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputEmail" class="col-lg-2 control-label" >Email</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText class="form-control" value="#{user.currentUser.email}" id="inputEmail" 
+                                                         valueChangeListener="#{user.emailChanged}"
+                                                         required="true" requiredMessage="Email is required" 
+                                                         validatorMessage="Validation Error: Not a valid Email format">
+                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                <f:ajax event="blur" render="inputEmailMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputEmailMessage" class="text text-danger" for="inputEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPhone" class="col-lg-2 control-label">Phone Number</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText class="form-control" value="#{user.currentUser.phoneNumber}" id="inputPhone" 
+                                                         validatorMessage="Validation Error: Not a valid Phone format">
+                                                <f:validateRegex pattern="(\d{2,3}-\d{7})" />
+                                                <f:ajax event="blur" render="inputPhoneMessage" />
+                                            </h:inputText>
+                                            <h:message id="inputPhoneMessage" class="text text-danger" for="inputPhone" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputUsername" class="col-lg-2 control-label">Username</label>
+                                        <div class="col-lg-10">
+                                            <h:inputText class="form-control" value="#{user.currentUser.userName}" id="inputUsername" 
+                                                         valueChangeListener="#{user.userNameChanged}"
+                                                         required="true" requiredMessage="Username is required" 
+                                                         validatorMessage="Validation Error: Username length must be between 5-10 characters">
+                                                <f:validateLength minimum="5" maximum="10" />
+                                                <f:ajax event="blur" render="inputUsernameMessage" />
+                                            </h:inputText>
+                                            <span class="help-block">Forces logout</span>
+                                            <h:message id="inputUsernameMessage" class="text text-danger" for="inputUsername" />
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputPassword" class="col-lg-2 control-label" >Password</label>
+                                        <div class="col-lg-10">
+                                            <h:inputSecret class="form-control" value="#{user.currentUser.password}" id="inputPassword" redisplay="true" 
+                                                           required="true" requiredMessage="Please enter password">
+                                                <f:validator validatorId="passwordValidator" />
+                                                <f:attribute name="inputConfirmPassword" value="#{inputConfirmPassword}" />
+                                            </h:inputSecret>
+                                            <h:message id="inputPasswordMessage" class="text text-danger" for="inputPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="inputConfirmPassword" class="col-lg-2 control-label" >Confirm Password</label>
+                                        <div class="col-lg-10">
+                                            <h:inputSecret class="form-control" value="#{user.currentUser.password}" id="inputConfirmPassword" redisplay="true" 
+                                                           binding="#{inputConfirmPassword}"
+                                                           required="true" requiredMessage="Please confirm password"/>
+                                            <h:message id="inputConfirmPasswordMessage" class="text text-danger" for="inputConfirmPassword" />
+                                        </div>
+                                    </div>
+
+                                    <h:outputText value="#{user.output}" class="text text-danger" id="out"/>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-10 col-lg-offset-2">
+                                            <h:commandButton value="Edit" class="btn btn-primary" action="#{user.editProfile()}" style="float: right;">
+                                                <f:ajax execute="@form" render="@form"/>
+                                            </h:commandButton>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                            <div class="col-md-4">  
+                                <c:if test="#{user.currentUser.picture != null}">
+                                    <h:graphicImage value="#{user.currentUser.picture}" width="100%" height="100%"/>
+                                </c:if>
+                                <h:form id="form" enctype="multipart/form-data">
+                                    <label class="control-label">Change picture</label>
+                                    <p><h:inputFile id="file" value="#{file.uploadedFile}"> 
+                                            <f:validator validatorId="FileValidator"/>
+                                        </h:inputFile>
+                                    </p>
+                                    <p><h:messages id="fileUploadMessage" class="text text-danger"/></p>
+                                    <br/>
+                                    <h:commandButton id="button" value="Upload" class="btn btn-primary" 
+                                                     action="#{user.setUserPicture(file.upload('/images/users', user.userName))}"/>
+                                </h:form> 
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <ui:include src="/resources/xhtml/myGroups.xhtml"/>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+</html>
